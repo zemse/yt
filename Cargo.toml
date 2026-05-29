@@ -11,7 +11,9 @@ homepage = "https://github.com/zemse/yt"
 readme = "README.md"
 keywords = ["youtube", "cli", "transcript", "yt-dlp"]
 categories = ["command-line-utilities"]
-exclude = ["PLAN.md", "RESEARCH.md"]
+# Whitelist exactly what ships in the published crate (Cargo.toml/Cargo.lock
+# are always included automatically).
+include = ["src/**/*.rs", "README.md", "LICENSE"]
 
 [[bin]]
 name = "yt"
