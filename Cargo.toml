@@ -1,6 +1,6 @@
 [package]
 name = "yt"
-version = "0.0.1"
+version = "0.1.0"
 edition = "2021"
 rust-version = "1.74"
 description = "A CLI for YouTube transcripts, downloads, and metadata — usable by humans and AI agents."
@@ -11,6 +11,7 @@ homepage = "https://github.com/zemse/yt"
 readme = "README.md"
 keywords = ["youtube", "cli", "transcript", "yt-dlp"]
 categories = ["command-line-utilities"]
+exclude = ["PLAN.md", "RESEARCH.md"]
 
 [[bin]]
 name = "yt"
