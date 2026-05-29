@@ -1,8 +1,6 @@
 # yt
 
-A command-line tool for YouTube — **transcripts**, **video/audio downloads** (for LLM analysis), and **metadata** — designed to be driven equally well by humans and AI agents.
-
-Every command supports `--format json` (a stable envelope on stdout, errors as JSON on stderr) and predictable exit codes, so agents can call it as reliably as a library. See [`PLAN.md`](PLAN.md) and [`RESEARCH.md`](RESEARCH.md) for design and background.
+A small command-line tool to get a **YouTube video's transcript** — no API key, no OAuth. Also does metadata, downloads, and an LLM-analysis bundle (see `yt help`).
 
 ## Install
 
@@ -10,57 +8,45 @@ Every command supports `--format json` (a stable envelope on stdout, errors as J
 cargo install yt
 ```
 
-Optional external tools (only needed for the commands that use them):
-- **[yt-dlp](https://github.com/yt-dlp/yt-dlp)** — `download`, `audio`, `frames`, `analyze` (`brew install yt-dlp`)
-- **ffmpeg** — `audio`, `frames` (`brew install ffmpeg`)
-- **whisper** (openai-whisper or whisper.cpp) — `analyze --whisper` fallback
-
-## Commands
-
-| Command | Needs key? | Needs tools? | Description |
-|---|---|---|---|
-| `yt transcript <video>` | no | no | Transcript via InnerTube, Invidious fallback. Text output shows `[m:ss]` timestamps by default (`--no-timestamps` to hide). `--lang`, `--translate`, `--format text\|json\|srt\|vtt` |
-| `yt info <video>` | optional | no | Metadata (Data API with key; oEmbed without) |
-| `yt download <video>` | no | yt-dlp | `--audio-only`, `--quality`, `-o`, `--cookies-from-browser` |
-| `yt audio <video>` | no | yt-dlp+ffmpeg | 16 kHz mono WAV, Whisper-ready |
-| `yt search <query>` | yes | no | `--limit` (costs 100 quota units) |
-| `yt channel <id\|@handle>` | yes | no | Channel stats |
-| `yt comments <video>` | yes | no | Top comments |
-| `yt playlist <id>` | yes | no | Playlist items |
-| `yt frames <video>` | no | yt-dlp+ffmpeg | Sample frames at `--fps` |
-| `yt analyze <video>` | optional | yt-dlp* | LLM bundle: transcript(+metadata)[+frames] as JSON |
-| `yt config set\|get\|path` | — | no | Manage `~/.yt` |
-
-\* `analyze` only needs tools if it has to fall back to Whisper or extract frames.
-
-## Examples
+## Get a transcript
 
 ```sh
-yt transcript "https://www.youtube.com/watch?v=BgMP3Bx1q10"
-yt transcript BgMP3Bx1q10 --format srt > subs.srt
-yt info BgMP3Bx1q10 --format json
-yt audio BgMP3Bx1q10 -o talk.wav        # 16kHz mono for Whisper
-yt analyze BgMP3Bx1q10 --format json > bundle.json
+yt transcript "https://www.youtube.com/watch?v=mqbyysExjfU"
 ```
 
-## Credentials
+```
+[0:01] Good evening, YouTube. This is Ramesh
+[0:03] Sheriff with another video log.
+[0:05] Okay, guys. After
+...
+```
 
-No OAuth — ever. The only credential is an **optional** YouTube Data API key, resolved in order:
+Accepts a full URL, a `youtu.be/…` link, or a bare video ID. Timestamps are shown by default — add `--no-timestamps` for plain text.
 
-1. `--api-key <KEY>`
-2. `YT_API_KEY` environment variable
-3. `~/.yt` config file (`yt config set api-key <KEY>`, written `0600`)
+A few handy variants:
 
-Transcripts and downloads need no credentials. `search`/`channel`/`comments`/`playlist` require a key (Data-API-only features).
+```sh
+yt transcript "<url>" --no-timestamps        # plain text, no timestamps
+yt transcript "<url>" --format srt > subs.srt # subtitle file
+yt transcript "<url>" --format json           # machine-readable (start/duration per line)
+yt transcript "<url>" --lang es               # pick a caption language
+```
 
-## JSON contract
+> Tip: always quote the URL (the `?`/`&` confuse the shell otherwise).
 
-`--format json` prints `{ "data": <result>, "meta": {...} }` to stdout on success, and `{ "error": { "code", "message" } }` to stderr on failure. Error codes: `not_found`, `auth`, `unavailable`, `missing_tool`, `network`, `input`. Exit codes: `0` ok, `1` generic, `2` not found, `3` auth/quota.
+## Other features
 
-## Reliability notes
+`yt` can also fetch metadata, download video/audio, extract frames, and build an LLM-ready bundle. Run:
 
-YouTube enforces PO-tokens and blocks datacenter IPs (see RESEARCH.md). Transcript fetching is most reliable from a residential IP; on failure the tool falls back to Invidious and reports a clear `unavailable` error.
+```sh
+yt help
+yt help transcript    # detailed flags for any subcommand
+```
+
+Quick tour: `yt info` (metadata), `yt download` / `yt audio` (needs [yt-dlp](https://github.com/yt-dlp/yt-dlp) + ffmpeg), `yt analyze` (transcript + metadata as JSON), `yt search` / `comments` / `channel` / `playlist` (need a YouTube Data API key via `yt config set api-key <KEY>`).
+
+Every command supports `--format json` (result on stdout, errors on stderr) for scripting and agents.
 
 ## License
 
-Licensed under the [MIT License](LICENSE).
+[MIT](LICENSE)
