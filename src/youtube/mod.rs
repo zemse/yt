@@ -70,6 +70,20 @@ pub fn http_client() -> reqwest::Client {
         .expect("failed to build reqwest client")
 }
 
+/// Render seconds as a compact human clock: `M:SS` (under an hour) or
+/// `H:MM:SS`. No milliseconds — used for readable text output.
+pub fn fmt_clock(seconds: f64) -> String {
+    let total = seconds.max(0.0).round() as u64;
+    let s = total % 60;
+    let m = (total / 60) % 60;
+    let h = total / 3600;
+    if h > 0 {
+        format!("{h}:{m:02}:{s:02}")
+    } else {
+        format!("{m}:{s:02}")
+    }
+}
+
 /// Render seconds as `HH:MM:SS,mmm` (SRT) or `HH:MM:SS.mmm` (VTT).
 pub fn fmt_timestamp(seconds: f64, comma: bool) -> String {
     let total_ms = (seconds * 1000.0).round() as u64;

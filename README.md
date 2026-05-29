@@ -19,7 +19,7 @@ Optional external tools (only needed for the commands that use them):
 
 | Command | Needs key? | Needs tools? | Description |
 |---|---|---|---|
-| `yt transcript <video>` | no | no | Transcript via InnerTube, Invidious fallback. `--lang`, `--translate`, `--timestamps`, `--format text\|json\|srt\|vtt` |
+| `yt transcript <video>` | no | no | Transcript via InnerTube, Invidious fallback. Text output shows `[m:ss]` timestamps by default (`--no-timestamps` to hide). `--lang`, `--translate`, `--format text\|json\|srt\|vtt` |
 | `yt info <video>` | optional | no | Metadata (Data API with key; oEmbed without) |
 | `yt download <video>` | no | yt-dlp | `--audio-only`, `--quality`, `-o`, `--cookies-from-browser` |
 | `yt audio <video>` | no | yt-dlp+ffmpeg | 16 kHz mono WAV, Whisper-ready |

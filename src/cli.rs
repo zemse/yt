@@ -47,8 +47,8 @@ pub enum Commands {
         /// Machine-translate the transcript to this language code.
         #[arg(long)]
         translate: Option<String>,
-        /// Include per-segment timestamps in text output.
-        #[arg(long)]
+        /// Omit per-segment timestamps from text output (shown by default).
+        #[arg(long = "no-timestamps", action = clap::ArgAction::SetFalse, default_value_t = true)]
         timestamps: bool,
     },
 

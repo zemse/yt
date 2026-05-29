@@ -7,7 +7,7 @@ use crate::error::Result;
 use crate::external::{self, DownloadOpts};
 use crate::id::parse_video_id;
 use crate::output::{self, OutputFormat};
-use crate::youtube::{self, dataapi, fmt_timestamp, oembed, Transcript};
+use crate::youtube::{self, dataapi, fmt_clock, fmt_timestamp, oembed, Transcript};
 use serde_json::json;
 
 /// `yt transcript`
@@ -44,7 +44,7 @@ fn render_text(t: &Transcript, timestamps: bool) -> String {
     let mut out = String::new();
     for s in &t.segments {
         if timestamps {
-            out.push_str(&format!("[{}] {}\n", fmt_timestamp(s.start, false), s.text));
+            out.push_str(&format!("[{}] {}\n", fmt_clock(s.start), s.text));
         } else {
             out.push_str(&s.text);
             out.push('\n');
