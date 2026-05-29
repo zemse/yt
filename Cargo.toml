@@ -1,0 +1,19 @@
+[package]
+name = "yt"
+version = "0.0.1"
+edition = "2021"
+rust-version = "1.74"
+description = "A CLI for YouTube transcripts, downloads, and metadata — usable by humans and AI agents. (Early scaffold; not yet functional.)"
+authors = ["Soham Zemse <soham@zemse.in>"]
+license = "MIT"
+repository = "https://github.com/zemse/yt"
+homepage = "https://github.com/zemse/yt"
+readme = "README.md"
+keywords = ["youtube", "cli", "transcript", "yt-dlp"]
+categories = ["command-line-utilities"]
+
+[[bin]]
+name = "yt"
+path = "src/main.rs"
+
+[dependencies]
